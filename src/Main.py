@@ -23,7 +23,7 @@ except FileNotFoundError as ex:
     exit(1)
 
 except Exception as ex:
-    with open('./LOG.txt', 'a') as log:
+    with open('LOG.txt', 'a') as log:
         log.write("\nFailure\n")
 
         for arg in ex.args:
