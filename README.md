@@ -10,3 +10,6 @@
 
 - Has partial support for FEN notation
 
+## Instructions
+- Run ChessPy/src/Main.py from src directory
+
