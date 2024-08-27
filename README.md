@@ -11,5 +11,5 @@
 - Has partial support for FEN notation
 
 ## Instructions
-- Run ChessPy/src/Main.py from src directory
+- In Main.py, select the desired game mode and run Main.py.
 
