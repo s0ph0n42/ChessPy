@@ -1,4 +1,5 @@
 import Game
+import os
 
 CPUONLY = __import__('Globals').GameMode.CPUONLY
 HUMANCPU = __import__('Globals').GameMode.HUMANCPU
@@ -9,6 +10,7 @@ game = Game.Game(HUMANONLY)
 #game = Game.Game(CPUONLY)
 
 try:
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     game.run()
 
     with open('LOG.txt', 'a') as log:

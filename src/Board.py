@@ -15,6 +15,8 @@ class board:
         self.history = []
         self.screen = screen
         self.enPessantSquare = None
+        self.halfMove = 0
+        self.fullMove = 0
         self.turn = 0
 
     
@@ -122,10 +124,18 @@ class board:
                     elif (type(self.piecesOnBoard[j][i]) is king):
                         piece_type = "k"
                         if self.piecesOnBoard[j][i].firstMove == True:
+
                             if self.piecesOnBoard[j][i].color == WHITE:
-                                castle += "QK"
+                                if (type(self.piecesOnBoard[7][7]) == rook) and (self.piecesOnBoard[7][7].firstMove):
+                                    castle += "K"
+                                if (type(self.piecesOnBoard[7][0]) == rook) and (self.piecesOnBoard[7][0].firstMove):
+                                    castle += "Q"
                             else:
-                                castle += "qk"
+                                if (type(self.piecesOnBoard[0][7]) == rook) and (self.piecesOnBoard[0][7].firstMove):
+                                    castle += "k"
+                                if (type(self.piecesOnBoard[0][0]) == rook) and (self.piecesOnBoard[0][0].firstMove):
+                                    castle += "q"
+
                     elif (type(self.piecesOnBoard[j][i]) is pawn):
                         piece_type = "p"
                     
@@ -158,6 +168,9 @@ class board:
             fen += f" {self.coordinateToAlgebraic(self.enPessantSquare)}"
         else:
             fen += " -"
+
+        fen += " " + str(self.halfMove)
+        fen += " " + str(self.fullMove)
 
         return fen
     
@@ -260,11 +273,14 @@ class board:
             elif (startY - endY == -2):
                 self.enPessantSquare = (startX, startY + 1)
 
+            self.halfMove = 0
+
             if (self.handlePawnMove(clickedPiece, endingSquare)):
                 self.endTurn()
                 return
         else:
             self.enPessantSquare = None
+            self.halfMove += 1
          
         if (type(clickedPiece) == king):
             if (self.handleKingMove(clickedPiece, endingSquare)):
@@ -276,6 +292,7 @@ class board:
         
         if (self.piecesOnBoard[endingSquare[0]][endingSquare[1]]):
             self.removeFromSquare(endingSquare)
+            self.halfMove = 0
         
         
         self.piecesOnBoard[startX][startY] = None
@@ -401,11 +418,17 @@ class board:
 
         clickedPawn.x, clickedPawn.y = endX, endY
         self.piecesOnBoard[endX][endY] = clickedPawn
+
+        self.halfMove = 0
     
     def endTurn(self):
         ''' Updates board history with new FEN string, increments board turn '''
+        if not self.whiteTurn:
+            self.fullMove += 1
+        
         self.history.append(self.getFEN())
         self.turn += 1
+
         self.whiteTurn = not self.whiteTurn
 
     def algebraicToCoordinate(self, alg: str) -> tuple:
